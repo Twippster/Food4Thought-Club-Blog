@@ -1,6 +1,6 @@
-# [Project name]
+# Food4Thought
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+Food4Thought is a student-led editorial blog about reducing food waste and making sure everyone is fed.
 
 ## Run & Operate
 
@@ -22,23 +22,33 @@ _Replace the heading above with the project's name, and this line with one sente
 
 ## Where things live
 
-_Populate as you build — short repo map plus pointers to the source-of-truth file for DB schema, API contracts, theme files, etc._
+- `artifacts/food4thought/` — deployable Vite web app
+- `artifacts/food4thought/src/App.tsx` — page content, local routes, newsletter interaction, and shared shell
+- `artifacts/food4thought/src/index.css` — Food4Thought visual language and responsive styles
+- `lib/api-spec/openapi.yaml` — shared API contract (unchanged; the first Food4Thought build is frontend-only)
 
 ## Architecture decisions
 
-_Populate as you build — non-obvious choices a reader couldn't infer from the code (3-5 bullets)._
+- The first release is frontend-only so the club can publish its point of view and content experience without requiring a CMS or database.
+- Local route state powers the home, stories, article, about, and join views so the first-minute browsing experience works without external services.
+- The visual identity uses a warm paper background, ink-teal typography, tomato accents, and broadsheet-inspired composition to make the publication feel student-made and memorable.
 
 ## Product
 
-_Describe the high-level user-facing capabilities of this app once they exist._
+- Homepage with mission statement, featured stories, publication ticker, and editorial manifesto.
+- Stories archive with category browsing for school lunch, leftovers, mutual aid, food rescue, and student action.
+- Long-form article view with byline, pull quote, tags, sharing/copy-link affordance, and related story navigation.
+- Join page with a working local newsletter signup success state.
+- About / point-of-view page and responsive mobile navigation.
 
 ## User preferences
 
-_Populate as you build — explicit user instructions worth remembering across sessions._
+No persistent preferences recorded.
 
 ## Gotchas
 
-_Populate as you build — sharp edges, "always run X before Y" rules._
+- The web artifact workflow supplies `PORT` and `BASE_PATH`; use the managed `artifacts/food4thought: web` workflow for previews.
+- The app intentionally has no backend dependency in its first release; newsletter signup feedback is local UI state.
 
 ## Pointers
 

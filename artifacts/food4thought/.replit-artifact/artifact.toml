@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "Food4Thought"
+description = "A warm editorial blog for a school club advocating for less food waste and a world where everyone is fed. Includes student stories, practical action guides, recipes, and community updates."
+version = "1.0.0"
+id = "artifacts/food4thought"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 25385
+
+[services.development]
+run = "pnpm --filter @workspace/food4thought run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/food4thought", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/food4thought/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "25385"
+BASE_PATH = "/"
