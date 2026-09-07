@@ -74,7 +74,7 @@ function NewsletterForm({ compact = false }: { compact?: boolean }) {
   const [joined, setJoined] = useState(false);
   const submit = (event: FormEvent<HTMLFormElement>) => { event.preventDefault(); if (email.trim()) setJoined(true); };
   if (joined) return <div className="newsletter-success"><Check size={17} /> You’re on the list. We’ll bring the good stuff next week.</div>;
-  return <form className="newsletter-form" onSubmit={submit}><label htmlFor={compact ? 'compact-email' : 'email'}>{compact ? 'Get the weekly dispatch' : 'An occasional note from the club'}</label><div className="newsletter-row"><input id={compact ? 'compact-email' : 'email'} className="newsletter-input" type="email" required placeholder="your@email.com" value={email} onChange={(event) => setEmail(event.target.value)} /><button className="newsletter-submit" type="submit">Sign me up</button></div>{!compact && <span className="newsletter-fine">No spam. No guilt. Just one thoughtful dispatch, when we have something worth saying.</span>}</form>;
+  return <form className="newsletter-form" onSubmit={submit}><label htmlFor={compact ? 'compact-email' : 'email'}>{compact ? 'Get the weekly dispatch' : 'An occasional note from the club'}</label><div className="newsletter-row"><input id={compact ? 'compact-email' : 'email'} className="newsletter-input" type="email" required placeholder="your@email.com" value={email} onChange={(event) => setEmail(event.target.value)} /><button className="newsletter-submit" type="submit">Sign me up</button></div></form>;
 }
 
 function StoryCard({ story, variant }: { story: Story; variant: 'main' | 'secondary' | 'tertiary' }) {
