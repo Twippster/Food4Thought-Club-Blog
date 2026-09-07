@@ -1,0 +1,1 @@
+- [OpenAPI date responses](openapi-date-responses.md) — Generated Zod response schemas may coerce date strings into Date objects, so normalize wire responses after validation.

@@ -10,6 +10,8 @@ servers:
 tags:
   - name: health
     description: Health operations
+  - name: stories
+    description: Published stories and club editor operations
 paths:
   /healthz:
     get:
@@ -24,7 +26,162 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /stories:
+    get:
+      operationId: listStories
+      tags: [stories]
+      summary: List stories
+      description: Public requests return published stories. The editor may pass a status filter.
+      parameters:
+        - name: status
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [all, draft, published]
+        - name: category
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: q
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Stories
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Story"
+    post:
+      operationId: createStory
+      tags: [stories]
+      summary: Create a story
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StoryInput"
+      responses:
+        "201":
+          description: Story created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Story"
+        "400":
+          description: Invalid story
+        "409":
+          description: Slug already exists
+  /stories/{id}:
+    get:
+      operationId: getStory
+      tags: [stories]
+      summary: Get a story for editing
+      parameters:
+        - $ref: "#/components/parameters/StoryId"
+      responses:
+        "200":
+          description: Story
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Story"
+        "404":
+          description: Story not found
+    patch:
+      operationId: updateStory
+      tags: [stories]
+      summary: Update a story
+      parameters:
+        - $ref: "#/components/parameters/StoryId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StoryUpdate"
+      responses:
+        "200":
+          description: Story updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Story"
+        "400":
+          description: Invalid story
+        "404":
+          description: Story not found
+        "409":
+          description: Slug already exists
+  /stories/slug/{slug}:
+    get:
+      operationId: getStoryBySlug
+      tags: [stories]
+      summary: Get a published story by slug
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Story
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Story"
+        "404":
+          description: Story not found
+  /stories/{id}/publish:
+    post:
+      operationId: publishStory
+      tags: [stories]
+      summary: Publish a story
+      parameters:
+        - $ref: "#/components/parameters/StoryId"
+      responses:
+        "200":
+          description: Published story
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Story"
+        "400":
+          description: Story is not ready to publish
+        "404":
+          description: Story not found
+  /stories/{id}/unpublish:
+    post:
+      operationId: unpublishStory
+      tags: [stories]
+      summary: Unpublish a story
+      parameters:
+        - $ref: "#/components/parameters/StoryId"
+      responses:
+        "200":
+          description: Unpublished story
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Story"
+        "404":
+          description: Story not found
 components:
+  parameters:
+    StoryId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
   schemas:
     HealthStatus:
       type: object
@@ -33,4 +190,55 @@ components:
           type: string
       required:
         - status
+    Story:
+      type: object
+      required: [id, slug, category, title, excerpt, author, date, readTimeMinutes, body, tags, status, createdAt, updatedAt]
+      properties:
+        id: { type: integer }
+        slug: { type: string }
+        category: { type: string }
+        title: { type: string }
+        excerpt: { type: string }
+        author: { type: string }
+        date: { type: string, format: date }
+        readTimeMinutes: { type: integer, minimum: 1 }
+        body: { type: string }
+        tags:
+          type: array
+          items: { type: string }
+        status:
+          type: string
+          enum: [draft, published]
+        publishedAt: { type: ["string", "null"], format: date-time }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+    StoryInput:
+      type: object
+      required: [slug, category, title, excerpt, author, date, readTimeMinutes, body, tags]
+      properties:
+        slug: { type: string, minLength: 1 }
+        category: { type: string, minLength: 1 }
+        title: { type: string, minLength: 1 }
+        excerpt: { type: string, minLength: 1 }
+        author: { type: string, minLength: 1 }
+        date: { type: string, format: date }
+        readTimeMinutes: { type: integer, minimum: 1 }
+        body: { type: string, minLength: 1 }
+        tags:
+          type: array
+          items: { type: string }
+    StoryUpdate:
+      type: object
+      properties:
+        slug: { type: string, minLength: 1 }
+        category: { type: string, minLength: 1 }
+        title: { type: string, minLength: 1 }
+        excerpt: { type: string, minLength: 1 }
+        author: { type: string, minLength: 1 }
+        date: { type: string, format: date }
+        readTimeMinutes: { type: integer, minimum: 1 }
+        body: { type: string, minLength: 1 }
+        tags:
+          type: array
+          items: { type: string }
 
