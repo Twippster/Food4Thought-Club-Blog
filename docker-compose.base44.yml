@@ -1,0 +1,69 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: f4t
+      POSTGRES_PASSWORD: f4t_dev_password
+      POSTGRES_DB: f4t
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U f4t"]
+      interval: 3s
+      timeout: 5s
+      retries: 10
+
+  # One-shot: install all workspace dependencies into the bind-mounted node_modules
+  setup:
+    image: node:24
+    working_dir: /app
+    volumes:
+      - ./:/app
+    command: sh -c "npm install -g pnpm@9 && pnpm install --no-frozen-lockfile"
+
+  # One-shot: push Drizzle schema to Postgres so the API server can query/seed
+  db-push:
+    image: node:24
+    working_dir: /app
+    volumes:
+      - ./:/app
+    environment:
+      - DATABASE_URL=postgresql://f4t:f4t_dev_password@postgres:5432/f4t
+    command: sh -c "npm install -g pnpm@9 && pnpm --filter @workspace/db run push-force"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      setup:
+        condition: service_completed_successfully
+
+  # Express API server (esbuild bundle + start) on internal port 5000
+  api:
+    image: node:24
+    working_dir: /app
+    volumes:
+      - ./:/app
+    environment:
+      - PORT=5000
+      - DATABASE_URL=postgresql://f4t:f4t_dev_password@postgres:5432/f4t
+      - NODE_ENV=development
+    command: sh -c "npm install -g pnpm@9 && pnpm --filter @workspace/api-server run dev"
+    depends_on:
+      db-push:
+        condition: service_completed_successfully
+    restart: unless-stopped
+
+  # Vite dev server (frontend) on host port 3000, proxying /api to the API service
+  web:
+    image: node:24
+    working_dir: /app
+    volumes:
+      - ./:/app
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - BASE_PATH=/
+      - __VITE_ADDITIONAL_SERVER_ALLOWED_HOSTS
+    command: sh -c "npm install -g pnpm@9 && pnpm --filter @workspace/food4thought run dev"
+    depends_on:
+      api:
+        condition: service_started
+    restart: unless-stopped
