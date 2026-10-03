@@ -69,6 +69,19 @@ export default defineConfig({
     strictPort: true,
     host: '0.0.0.0',
     allowedHosts: true,
+    // In Base44 the API runs as a separate process; proxy /api to it so the
+    // frontend's relative requests resolve on a single origin. Only active
+    // when API_PROXY_TARGET is set (no effect on the Replit deployment router).
+    ...(process.env.API_PROXY_TARGET
+      ? {
+          proxy: {
+            '/api': {
+              target: process.env.API_PROXY_TARGET,
+              changeOrigin: true,
+            },
+          },
+        }
+      : {}),
     fs: {
       strict: true,
     },
