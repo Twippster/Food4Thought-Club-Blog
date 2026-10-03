@@ -10,14 +10,14 @@
   --card-foreground: 98 40% 18%;
   --border: 98 16% 72%;
   --input: 42 25% 82%;
-  --ring: 16 77% 55%;
+  --ring: 35 70% 52%;
   --primary: 98 38% 51%;
   --primary-foreground: 98 40% 18%;
   --secondary: 42 61% 73%;
   --secondary-foreground: 98 40% 18%;
   --muted: 39 24% 86%;
   --muted-foreground: 98 17% 40%;
-  --accent: 16 77% 55%;
+  --accent: 35 70% 52%;
   --accent-foreground: 42 44% 95%;
   --destructive: 1 65% 45%;
   --destructive-foreground: 42 44% 95%;
@@ -36,14 +36,14 @@
   --card-foreground: 42 44% 95%;
   --border: 98 20% 31%;
   --input: 98 20% 31%;
-  --ring: 16 77% 55%;
+  --ring: 35 70% 52%;
   --primary: 98 38% 51%;
   --primary-foreground: 98 40% 18%;
   --secondary: 98 27% 26%;
   --secondary-foreground: 42 44% 95%;
   --muted: 98 25% 23%;
   --muted-foreground: 42 18% 70%;
-  --accent: 16 77% 55%;
+  --accent: 35 70% 52%;
   --accent-foreground: 42 44% 95%;
   --destructive: 1 65% 55%;
   --destructive-foreground: 42 44% 95%;
@@ -175,7 +175,7 @@
 .story-card:hover { transform: translateY(-6px); }
 .story-card.main { min-height: 500px; background: hsl(var(--primary)); color: hsl(var(--primary-foreground)); }
 .story-card.secondary { background: hsl(var(--secondary)); }
-.story-card.tertiary { background: hsl(16 77% 55%); color: hsl(42 44% 95%); }
+.story-card.tertiary { background: hsl(35 70% 52%); color: hsl(42 44% 95%); }
 .story-card .story-meta { opacity: .7; margin-bottom: auto; }
 .story-card h3 { font-family: var(--app-font-serif); font-size: clamp(28px, 3.5vw, 45px); letter-spacing: -.045em; line-height: .98; margin: 25px 0 13px; }
 .story-card.secondary h3, .story-card.tertiary h3 { font-size: 31px; }
