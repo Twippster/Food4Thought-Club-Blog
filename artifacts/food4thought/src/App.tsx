@@ -19,6 +19,7 @@ import { ErrorBoundary } from '@/components/error-boundary';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import NotFound from '@/pages/not-found';
+import { EditorLockScreen, useEditorAuth } from '@/components/editor-gate';
 
 const queryClient = new QueryClient();
 const baseCategories = ['school lunch', 'leftovers', 'mutual aid', 'food rescue', 'student action'];
@@ -127,6 +128,8 @@ function About() {
 }
 
 function EditorShell({ children }: { children: ReactNode }) {
+  const { authed, unlock } = useEditorAuth();
+  if (!authed) return <EditorLockScreen onUnlock={unlock} />;
   return <div className="editor-shell"><aside className="editor-sidebar"><Link href="/" className="brand"><span className="brand-mark">F</span><span className="brand-name">food<span>4</span>thought</span></Link><div className="editor-sidebar-label eyebrow">Publishing desk</div><Link href="/editor" className="editor-side-link"><Edit3 size={16} /> Stories</Link><Link href="/editor/new" className="editor-side-link"><Plus size={16} /> New story</Link><div className="editor-sidebar-spacer" /><Link href="/" className="editor-side-link editor-side-muted"><ExternalLink size={15} /> View publication</Link></aside><div className="editor-main"><header className="editor-mobile-header"><Link href="/" className="brand"><span className="brand-mark">F</span><span className="brand-name">food<span>4</span>thought</span></Link><Link href="/editor/new" className="editor-icon-button" aria-label="Create new story"><Plus size={20} /></Link></header>{children}</div></div>;
 }
 
