@@ -3,6 +3,7 @@ import { Router, type IRouter } from "express";
 import {
   CreateStoryBody,
   CreateStoryResponse,
+  DeleteStoryParams,
   GetStoryBySlugParams,
   GetStoryBySlugResponse,
   GetStoryParams,
@@ -221,6 +222,23 @@ router.post("/stories/:id/unpublish", async (req, res): Promise<void> => {
     return;
   }
   res.json(serializeStory(UnpublishStoryResponse.parse(storyResponse(story))));
+});
+
+router.delete("/stories/:id", async (req, res): Promise<void> => {
+  const parsed = DeleteStoryParams.safeParse(req.params);
+  if (!parsed.success) {
+    res.status(400).json({ error: parsed.error.message });
+    return;
+  }
+  const [story] = await db
+    .delete(storiesTable)
+    .where(eq(storiesTable.id, parsed.data.id))
+    .returning();
+  if (!story) {
+    res.status(404).json({ error: "Story not found" });
+    return;
+  }
+  res.status(204).end();
 });
 
 export default router;

@@ -655,3 +655,78 @@ export const useUnpublishStory = <TError = ErrorType<void>,
       > => {
       return useMutation(getUnpublishStoryMutationOptions(options));
     }
+
+
+
+
+
+export const getDeleteStoryUrl = (id: number,) => {
+
+
+
+
+  return `/api/stories/${id}`
+}
+
+/**
+ * @summary Delete a story
+ */
+export const deleteStory = async (id: number, options?: Parameters<typeof customFetch>[1]): Promise<void> => {
+
+  return customFetch<void>(getDeleteStoryUrl(id),
+  {
+    ...options,
+    method: 'DELETE'
+
+
+  }
+);}
+
+
+
+
+
+export const getDeleteStoryMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteStory>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteStory>>, TError,{id: number}, TContext> => {
+
+const mutationKey = ['deleteStory'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteStory>>, {id: number}> = (props) => {
+          const {id} = props ?? {};
+
+          return  deleteStory(id,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteStoryMutationResult = NonNullable<Awaited<ReturnType<typeof deleteStory>>>
+
+    export type DeleteStoryMutationError = ErrorType<void>
+
+    /**
+ * @summary Delete a story
+ */
+export const useDeleteStory = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteStory>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof deleteStory>>,
+        TError,
+        {id: number},
+        TContext
+      > => {
+      return useMutation(getDeleteStoryMutationOptions(options));
+    }

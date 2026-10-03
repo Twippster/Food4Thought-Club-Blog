@@ -120,6 +120,17 @@ paths:
           description: Story not found
         "409":
           description: Slug already exists
+    delete:
+      operationId: deleteStory
+      tags: [stories]
+      summary: Delete a story
+      parameters:
+        - $ref: "#/components/parameters/StoryId"
+      responses:
+        "204":
+          description: Story deleted
+        "404":
+          description: Story not found
   /stories/slug/{slug}:
     get:
       operationId: getStoryBySlug

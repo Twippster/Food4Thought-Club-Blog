@@ -253,3 +253,11 @@ export const UnpublishStoryResponse = zod.object({
   "createdAt": zod.coerce.date(),
   "updatedAt": zod.coerce.date()
 })
+
+
+/**
+ * @summary Delete a story
+ */
+export const DeleteStoryParams = zod.object({
+  "id": zod.coerce.number().int()
+})
